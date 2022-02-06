@@ -1,0 +1,11 @@
+---
+title: test
+author: Jcib
+date: '2022-01-30'
+slug: []
+categories:
+  - R
+tags:
+  - test
+  - aver
+---

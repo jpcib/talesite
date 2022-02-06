@@ -1,0 +1,94 @@
+---
+title: Twitter como fuente de datos
+author: Jcib
+date: '2022-01-30'
+slug: []
+mainfont: Open Sans 
+categories:
+  - R
+tags:
+  - Twitter
+  - Regex
+---
+
+
+```{r setup, include=FALSE}
+chooseCRANmirror(graphics=FALSE, ind=1)
+knitr::opts_chunk$set(echo = TRUE)
+```
+Forma sencilla de scrapear la timeline de una cuenta de twitter, y extraer datos útiles mediante expresiones regulares (regex).
+<!--more-->
+
+# Twitter como fuente de datos
+
+## "Escrapeando" la tl de [Nora Bar](https://twitter.com/norabar/)
+
+> **Advertencia:** *No entro en detalle sobre como utilizar auth o tokens a través de la API de twitter o cómo crear una APP en developer.twitter.com*
+
+> **Advertencia 2:** *En este post vamos a tratar con tweets, es decir texto. *
+*Si, vamos a tratar con regex.*
+*Si, voy a explicarles que significa cada cosito.*
+*No, no es tan difícil. Les juro que hasta puede ser divertido... Bueno, depende..* 
+
+Twitter sirve para muchas cosas. Enojarse y hacer enojar a otrxs es la principal, pero el potencial es amplio.
+
+En este caso preciso datos sobre Covid, me aproximé a la tarea a través de la tl de Nora en primer lugar por la *consistencia* en el formato y la *constancia* con que publica estos datos, además de que recopila datos *oficiales*.
+
+![Para muestra sobra un botón](nora_tl.png)
+_Para muestra sobra un botón_
+
+Para comenzar a bajar los tweets precisamos instalar el paquete **{rtweet}**, también usaremos **{dplyr}** para manipular dataframes y **{stringr}** para trabajar con texto
+
+```{r, echo=TRUE, include=TRUE, results='hide', warning=FALSE,message=FALSE, tidy=TRUE}
+#install.packages("rtweet")
+library(rtweet)
+library(dplyr)
+library(readr)
+library(stringr)
+```
+
+Por suerte rtweet resultó un poco más simple que lo que recordaba, sin necesidad de autenticarnos y solamente con el handle (el arroba) podemos extraer los 3200 tweets mas recientes de una timeline. Lamentablemente, no más que eso.
+``` {r,echo=FALSE,include=FALSE}
+tl_nora <- read_csv("tl_nora.csv")
+```
+
+```{r, eval= -1}
+tl_nora2 <- get_timeline("norabar", n = 3200)
+
+head(tl_nora)
+```
+
+Vamos entonces a procesar esta data:
+
+1. Vamos a tomar las columnas que nos interesan, en este caso fecha del tweet y y el cuerpo. 
+2. Filtramos los tweets que tengan en la columna texto una serie de dígitos cualesquiera con la regex \\d* y que luego contengan la cadena de caracteres " personas en terapia". Para esto la regex es (?=cadena de texto a matchear)
+**Nótese en el código que el espacio luego del signo = es a propósito** quiero que lo que siga a los dígitos sea un espacio y la frase que busco.
+Esta cadena que elegí fue arbitraria en base a una exploración de los tweets, otras opciones también son posibles.
+3. Un primer mutate donde llevo toda mi columna de texto a minúsculas para que esto no afecte si en algún caso Nora se olvidó de poner alguna mayúscula consistentemente.
+
+Ahora a lo interesante:
+4. Voy a generar una nueva columna por cada dato que extraiga. y como venimos en racha, voy a empezar explicando cada una de las regex, y luego el resto de la función, que es la misma para cada caso.
+4.a: \\d'\*'.\\d'\*'  -- Acá tenemos nuevamente digitos, seguidos de un caracter cualquiera (simbolizado por el punto), seguido de más dígitos. 
+Luego, volvemos a tener el (?=cadena de texto) que en este caso es un espacio y la palabra *notificados*.
+
+
+```{r}
+tls <- tl_nora %>% 
+  select(created_at, text) %>%  # 1
+  filter(str_detect(text, "\\d*(?= personas en terapia)")) %>% # 2
+  mutate(text = str_to_lower(text)) %>%  # 3
+  mutate(casos = parse_number(str_extract(text, "\\d*.\\d*(?= notificados)"), 
+                              locale = locale(decimal_mark = ",")),
+         uti_covid = parse_number(str_extract(text, "\\d*(?= personas en terapia)"), 
+                                  locale = locale(decimal_mark = ",")),
+         tests_dia = parse_number(str_extract(text, "(?<=tests del d[í|i]a: )\\d*\\.\\d*"),
+                                  locale = locale(decimal_mark = ",")),
+         uti_nacion = parse_number(str_extract(text, "(?<=naci[ó|o]n )\\d*.\\d."),
+                                   locale = locale(decimal_mark = ",")),
+         uti_amba = parse_number(str_extract(text, "(?<=amba )\\d*.\\d."),
+                                 locale = locale(decimal_mark = ","))
+  ) %>%
+  mutate(uti_amba = ifelse(uti_amba == 367, 36.7, uti_amba)) %>% #arreglo un pequeño error de parseo
+  print()
+```
+

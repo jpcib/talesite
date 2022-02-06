@@ -1,0 +1,6 @@
+theme: "tale-hugo"
+baseURL: http://example.org/
+languageCode: en-us
+title: Jcib::blogwise()
+excerpt_separator: <!--more-->
+mainfont: EncodeSans
