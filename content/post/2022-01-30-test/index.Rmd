@@ -11,14 +11,14 @@ tags:
 ---
 Mint - Sondeo semanal de medios.
 <!--more-->
-```{r, echo=FALSE,results='hide',warning=FALSE}
+```{r,results='hide',warning=FALSE}
 library(flexdashboard)
 library(readr)
 library(magrittr)
 library(DT)
 ```
 
-```{r, echo=FALSE,results='hide', warning=FALSE, message=FALSE}
+```{r,results='hide', warning=FALSE, message=FALSE}
 tabla <- read_csv("pre_tabla.csv") 
 
 ```
