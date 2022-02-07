@@ -1,5 +1,5 @@
 theme: "tale-hugo"
-baseURL: http://example.org/
+baseURL: https://sharp-babbage-d1df51.netlify.app/
 languageCode: en-us
 title: Jcib::blogwise()
 excerpt_separator: <!--more-->
