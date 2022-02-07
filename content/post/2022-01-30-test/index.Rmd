@@ -25,7 +25,7 @@ tabla <- read_csv("pre_tabla.csv")
 
 ### Noticias
 
-```{r,echo=FALSE, warning=FALSE}
+```{r}
 
 DT::datatable(tabla, filter = 'top', escape = FALSE, options = list(
 pageLength = 50, autoWidth = TRUE))
