@@ -9,16 +9,16 @@ tags:
   - test
   - sondeo
 ---
-Mint - Sondeo semanal de medios.
-<!--more-->
-```{r,results='hide',warning=FALSE}
+
+
+```{r}
 library(flexdashboard)
 library(readr)
 library(magrittr)
 library(DT)
 ```
 
-```{r,results='hide', warning=FALSE, message=FALSE}
+```{r}
 tabla <- read_csv("pre_tabla.csv") 
 
 ```
