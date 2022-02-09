@@ -13,7 +13,7 @@ tags:
 Tabla de contenidos de medios argentinos mediante RSS.
 ---
 
-texto
+Si no aparece, el **formato de fecha** desde-hasta es: **2021-11-20 ... 2022-02-07**
 
 ```{r lib, include=FALSE}
 library(flexdashboard)
