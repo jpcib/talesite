@@ -10,10 +10,16 @@ tags:
   - sondeo
 ---
 
+Tabla de contenidos de medios argentinos mediante RSS.
+---
+
+texto
 
 ```{r lib, include=FALSE}
 library(flexdashboard)
 library(readr)
+library(dplyr)
+library(tidyr)
 library(magrittr)
 library(DT)
 ```
@@ -21,6 +27,7 @@ library(DT)
 ```{r tabla, include=FALSE}
 tabla <- read_csv("pre_tabla.csv") 
 
+tabla$medio <- as.factor(tabla$medio)
 ```
 
 ## Noticias:
@@ -29,7 +36,22 @@ Filtrar según medio, fecha, o palabras clave. El buscador de arriba a la derech
 
 ```{r dt plot, echo=FALSE, message=FALSE, warning=FALSE}
 
-DT::datatable(tabla, filter = 'top', escape = FALSE, options = list(
-pageLength = 50, autoWidth = TRUE))
+DT::datatable(tabla, filter = 'top', 
+              escape = FALSE, 
+              class = 'cell-border stripe',
+              options = list(pageLength = 50, autoWidth = TRUE,
+                             columnDefs = list(list(width = '200px', targets = 3)),
+                             initComplete = JS(
+              "function(settings, json) {",
+              "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+              "}")),
+               rownames = FALSE
+              )
 
+# datatable(head(iris, 20), options = list(
+#   initComplete = JS(
+#     "function(settings, json) {",
+#     "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
+#     "}")
+# ))
 ```
