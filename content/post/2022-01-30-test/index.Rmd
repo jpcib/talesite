@@ -25,9 +25,9 @@ library(DT)
 ```
 
 ```{r tabla, include=FALSE}
-#tabla1 <- read_csv("pre_tabla.csv")
-tabla <- read_csv("pre_tabla_02-17.csv")
-
+tabla2 <- read_csv("pre_tabla_02-18-A.csv")
+tabla1 <- read_csv("pre_tabla_02-17.csv")
+tabla <- bind_rows(tabla1,tabla2)
 tabla$medio <- as.factor(tabla$medio)
 ```
 
