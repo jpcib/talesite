@@ -25,6 +25,8 @@ library(DT)
 ```
 
 ```{r tabla, include=FALSE}
+tabla6 <- read_csv("pre_tabla_02-22-B.csv")
+tabla5 <- read_csv("pre_tabla_02-21-B.csv")
 tabla4 <- read_csv("pre_tabla_02-21-A.csv")
 tabla3 <- read_csv("pre_tabla_02-18-B.csv")
 tabla2 <- read_csv("pre_tabla_02-18-A.csv")
