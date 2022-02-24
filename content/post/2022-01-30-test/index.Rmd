@@ -25,13 +25,14 @@ library(DT)
 ```
 
 ```{r tabla, include=FALSE}
+tabla7 <- read_csv("pre_tabla_02-24-A.csv")
 tabla6 <- read_csv("pre_tabla_02-22-B.csv")
 tabla5 <- read_csv("pre_tabla_02-21-B.csv")
 tabla4 <- read_csv("pre_tabla_02-21-A.csv")
 tabla3 <- read_csv("pre_tabla_02-18-B.csv")
 tabla2 <- read_csv("pre_tabla_02-18-A.csv")
 tabla1 <- read_csv("pre_tabla_02-17.csv")
-tabla <- bind_rows(tabla4,tabla3,tabla2,tabla1) %>% 
+tabla <- bind_rows(tabla7,tabla6,tabla5,tabla4,tabla3,tabla2,tabla1) %>% 
   distinct(titulo, .keep_all = TRUE) %>% 
   print()
 tabla$medio <- as.factor(tabla$medio)
