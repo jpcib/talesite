@@ -23,12 +23,11 @@ library(tidyr)
 library(magrittr)
 library(DT)
 library(purrr)
-library(stringr)
 ```
 
 ```{r tabla, include=FALSE}
 path <- list.files(
-  path = paste0(here::here(),"/content/post/2022-01-30-test"), pattern = "pre_tabla_")
+  path = here::here("content","post","2022-01-30-test"), pattern = "pre_tabla_")
 
 tabla <- map_dfr(path, read_csv)
 
